@@ -4,9 +4,15 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class Order {
-    private String id;
+    private final String id;
     private BigDecimal value;
     private List<String> promotions;
+
+    Order(String id, BigDecimal value, List<String> promotions) {
+        this.id = id;
+        this.value = value;
+        this.promotions = promotions;
+    }
 
     public BigDecimal getValue() {
         return value;
@@ -18,10 +24,6 @@ public class Order {
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setPromotions(List<String> promotions) {

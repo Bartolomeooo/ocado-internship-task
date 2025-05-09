@@ -3,9 +3,15 @@ package org.example.model;
 import java.math.BigDecimal;
 
 public class PaymentMethod {
-    private String id;
+    private final String id;
     private BigDecimal discount;
     private BigDecimal limit;
+
+    PaymentMethod(String id, BigDecimal discount, BigDecimal limit) {
+        this.id = id;
+        this.discount = discount;
+        this.limit = limit;
+    }
 
     public String getId() {
         return id;
@@ -17,10 +23,6 @@ public class PaymentMethod {
 
     public BigDecimal getDiscount() {
         return discount;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setDiscount(BigDecimal discount) {
