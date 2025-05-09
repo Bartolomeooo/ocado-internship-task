@@ -3,9 +3,9 @@ package org.example.model;
 import java.math.BigDecimal;
 
 public class PaymentMethod {
-    String id;
-    BigDecimal discount;
-    BigDecimal limit;
+    private String id;
+    private BigDecimal discount;
+    private BigDecimal limit;
 
     public String getId() {
         return id;

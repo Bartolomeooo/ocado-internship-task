@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class Order {
-    String id;
-    BigDecimal value;
-    List<String> promotions;
+    private String id;
+    private BigDecimal value;
+    private List<String> promotions;
 
     public BigDecimal getValue() {
         return value;
