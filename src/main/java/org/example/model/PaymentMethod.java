@@ -11,9 +11,9 @@ public class PaymentMethod {
     private BigDecimal limit;
 
     @JsonCreator
-    PaymentMethod(@JsonProperty("id") String id,
-                  @JsonProperty("discount") BigDecimal discount,
-                  @JsonProperty("limit") BigDecimal limit) {
+    public PaymentMethod(@JsonProperty("id") String id,
+                         @JsonProperty("discount") BigDecimal discount,
+                         @JsonProperty("limit") BigDecimal limit) {
         this.id = id;
         this.discount = discount;
         this.limit = limit;

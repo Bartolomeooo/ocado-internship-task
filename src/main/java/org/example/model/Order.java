@@ -12,7 +12,7 @@ public class Order {
     private List<String> promotions;
 
     @JsonCreator
-    Order(@JsonProperty("id") String id,
+    public Order(@JsonProperty("id") String id,
           @JsonProperty("value") BigDecimal value,
           @JsonProperty("promotions") List<String> promotions) {
         this.id = id;
