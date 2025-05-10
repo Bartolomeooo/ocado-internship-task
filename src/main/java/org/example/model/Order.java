@@ -1,5 +1,8 @@
 package org.example.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -8,7 +11,10 @@ public class Order {
     private BigDecimal value;
     private List<String> promotions;
 
-    Order(String id, BigDecimal value, List<String> promotions) {
+    @JsonCreator
+    Order(@JsonProperty("id") String id,
+          @JsonProperty("value") BigDecimal value,
+          @JsonProperty("promotions") List<String> promotions) {
         this.id = id;
         this.value = value;
         this.promotions = promotions;
