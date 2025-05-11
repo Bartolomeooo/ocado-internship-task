@@ -20,7 +20,11 @@ public class UnpaidOrdersHandler {
 
     public void handleUnpaidOrders(GreedyPaymentPlannerContext context,
                                    List<PaymentMethod> allPaymentMethods) {
-        Set<String> unfulfilledIds = new HashSet<>(context.getUnfulfilledOrderIds());
+        List<String> unfulfilledIds = context.getUnfulfilledOrderIds().stream()
+                .sorted(Comparator.comparing(
+                        id -> context.getOrderPaymentBreakdown(id).getOrder().getValue(), Comparator.reverseOrder()
+                ))
+                .toList();
 
         for (String orderId : unfulfilledIds) {
             OrderPaymentBreakdown orderPaymentBreakdown = context.getOrderPaymentBreakdown(orderId);
@@ -58,23 +62,22 @@ public class UnpaidOrdersHandler {
                                               BigDecimal remainingUnpaidOrderValue) {
         OrderPaymentBreakdown breakdown = context.getOrderPaymentBreakdown(orderId);
 
-        // Sort methods by available limit descending
-        // This step may be redundant for correctness but it aligns with the example logic described in the task pdf
         List<PaymentMethod> sortedPaymentMethods = allPaymentMethods.stream()
+                .filter(paymentMethod -> !paymentMethod.getId().equals(config.getPointsMethodId()))
                 .sorted(Comparator.comparing(method -> context.getRemainingLimit(method.getId()), Comparator.reverseOrder()))
                 .toList();
 
-        for (PaymentMethod method : sortedPaymentMethods) {
-            BigDecimal methodLimit = context.getRemainingLimit(method.getId());
-            if (methodLimit.compareTo(BigDecimal.ZERO) <= 0) continue;
+        for (PaymentMethod paymentMethod : sortedPaymentMethods) {
+            BigDecimal paymentMethodLimit = context.getRemainingLimit(paymentMethod.getId());
+            if (paymentMethodLimit .compareTo(BigDecimal.ZERO) <= 0) continue;
 
-            BigDecimal amountToAllocateFromMethod = remainingUnpaidOrderValue.min(methodLimit);
+            BigDecimal amountToAllocateFromMethod = remainingUnpaidOrderValue.min(paymentMethodLimit );
             if (amountToAllocateFromMethod.compareTo(BigDecimal.ZERO) > 0) {
-                breakdown.getAmountPaidByMethodId().merge(method.getId(), amountToAllocateFromMethod, BigDecimal::add);
-                context.decreaseLimit(method.getId(), amountToAllocateFromMethod);
+                breakdown.getAmountPaidByMethodId().put(paymentMethod.getId(), amountToAllocateFromMethod);
+                context.decreaseLimit(paymentMethod.getId(), amountToAllocateFromMethod);
                 remainingUnpaidOrderValue = remainingUnpaidOrderValue.subtract(amountToAllocateFromMethod);
-                if (remainingUnpaidOrderValue.compareTo(BigDecimal.ZERO) <= 0) break;
             }
+            break;
         }
 
         if (remainingUnpaidOrderValue.compareTo(BigDecimal.ZERO) <= 0) {

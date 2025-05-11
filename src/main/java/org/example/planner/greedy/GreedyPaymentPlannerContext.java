@@ -10,7 +10,7 @@ import java.util.*;
 public class GreedyPaymentPlannerContext {
     private final Map<String, BigDecimal> remainingLimitsByPaymentMethod;
     private final Map<String, OrderPaymentBreakdown> orderPaymentBreakdownByOrderId;
-    private final Set<String> unfulfilledOrderIds;
+    private final List<String> unfulfilledOrderIds;
 
     public GreedyPaymentPlannerContext(List<Order> orders, List<PaymentMethod> paymentMethods) {
         this.remainingLimitsByPaymentMethod = new HashMap<>();
@@ -23,7 +23,7 @@ public class GreedyPaymentPlannerContext {
             orderPaymentBreakdownByOrderId.put(order.getId(), new OrderPaymentBreakdown(order));
         }
 
-        this.unfulfilledOrderIds = new HashSet<>();
+        this.unfulfilledOrderIds =  new ArrayList<>();
         for (Order order : orders) {
             unfulfilledOrderIds.add(order.getId());
         }
@@ -49,7 +49,7 @@ public class GreedyPaymentPlannerContext {
         unfulfilledOrderIds.remove(orderId);
     }
 
-    public Set<String> getUnfulfilledOrderIds() {
-        return new HashSet<>(unfulfilledOrderIds);
+    public List<String> getUnfulfilledOrderIds() {
+        return unfulfilledOrderIds;
     }
 }
