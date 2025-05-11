@@ -28,4 +28,28 @@ public class GreedyPaymentPlannerContext {
             unfulfilledOrderIds.add(order.getId());
         }
     }
+
+    public BigDecimal getRemainingLimit(String paymentMethodId) {
+        return remainingLimitsByPaymentMethod.getOrDefault(paymentMethodId, BigDecimal.ZERO);
+    }
+
+    public void decreaseLimit(String paymentMethodId, BigDecimal amount) {
+        remainingLimitsByPaymentMethod.put(paymentMethodId, getRemainingLimit(paymentMethodId).subtract(amount));
+    }
+
+    public OrderPaymentBreakdown getOrderPaymentBreakdown(String orderId) {
+        return orderPaymentBreakdownByOrderId.get(orderId);
+    }
+
+    public Collection<OrderPaymentBreakdown> getAllOrderPaymentBreakdowns() {
+        return orderPaymentBreakdownByOrderId.values();
+    }
+
+    public void markAsFulfilled(String orderId) {
+        unfulfilledOrderIds.remove(orderId);
+    }
+
+    public Set<String> getUnfulfilledOrderIds() {
+        return new HashSet<>(unfulfilledOrderIds);
+    }
 }
