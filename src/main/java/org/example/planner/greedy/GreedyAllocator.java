@@ -74,7 +74,7 @@ public class GreedyAllocator {
                                          PaymentMethod method,
                                          Order order) {
         BigDecimal orderValue = order.getValue();
-        BigDecimal discount = orderValue.multiply(method.getDiscount()).divide(BigDecimal.valueOf(100));
+        BigDecimal discount = orderValue.multiply(method.getDiscount().divide(BigDecimal.valueOf(100)));
         BigDecimal amountToPayAfterDiscount = orderValue.subtract(discount);
 
         context.getOrderPaymentBreakdown(order.getId())

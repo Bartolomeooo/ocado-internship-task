@@ -49,7 +49,7 @@ public class UnpaidOrdersHandler {
             breakdown.getAmountPaidByMethodId().put(pointsId, pointsAmountAllocatedToOrder);
             context.decreaseLimit(pointsId, pointsAmountAllocatedToOrder);
             remainingUnpaidOrderValue = remainingUnpaidOrderValue
-                    .subtract(remainingUnpaidOrderValue.multiply(config.getDiscountPercentage()))
+                    .subtract(remainingUnpaidOrderValue.multiply(config.getDiscountPercentage().divide(BigDecimal.valueOf(100))))
                     .subtract(pointsAmountAllocatedToOrder);
         }
 

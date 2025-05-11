@@ -23,7 +23,7 @@ public class GreedyPaymentPlannerContext {
             orderPaymentBreakdownByOrderId.put(order.getId(), new OrderPaymentBreakdown(order));
         }
 
-        this.unfulfilledOrderIds =  new ArrayList<>();
+        this.unfulfilledOrderIds = new ArrayList<>();
         for (Order order : orders) {
             unfulfilledOrderIds.add(order.getId());
         }

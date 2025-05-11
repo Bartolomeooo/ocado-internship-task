@@ -14,7 +14,7 @@ public class Main {
             return;
         }
 
-        PlannerConfig config = new PlannerConfig("PUNKTY", BigDecimal.valueOf(0.1), BigDecimal.valueOf(0.1));
+        PlannerConfig config = new PlannerConfig("PUNKTY", BigDecimal.valueOf(0.1), BigDecimal.valueOf(10));
         PaymentPlanner planner = new GreedyPaymentPlanner(config);
         ApplicationRunner runner = new ApplicationRunner(planner);
 

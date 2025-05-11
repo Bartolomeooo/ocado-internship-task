@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 public class PaymentMethod {
     private final String id;
-    private BigDecimal discount;
+    private BigDecimal discount; // Percentage
     private BigDecimal limit;
 
     @JsonCreator
@@ -29,13 +29,5 @@ public class PaymentMethod {
 
     public BigDecimal getDiscount() {
         return discount;
-    }
-
-    public void setDiscount(BigDecimal discount) {
-        this.discount = discount;
-    }
-
-    public void setLimit(BigDecimal limit) {
-        this.limit = limit;
     }
 }

@@ -31,12 +31,4 @@ public class Order {
     public String getId() {
         return id;
     }
-
-    public void setPromotions(List<String> promotions) {
-        this.promotions = promotions;
-    }
-
-    public void setValue(BigDecimal value) {
-        this.value = value;
-    }
 }
