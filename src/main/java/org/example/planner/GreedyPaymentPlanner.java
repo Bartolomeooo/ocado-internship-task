@@ -140,6 +140,8 @@ public class GreedyPaymentPlanner implements PaymentPlanner {
 
         if (remainingUnpaidOrderValue.compareTo(BigDecimal.ZERO) <= 0) {
             context.markAsFulfilled(orderId);
+        } else {
+            throw new IllegalStateException("Unable to fully pay order: " + orderId);
         }
     }
 }
