@@ -35,8 +35,8 @@ The solution uses a two-phase greedy algorithm to assign payment methods to orde
 If any orders remain unpaid after phase 1:
 
 - Unpaid orders are first sorted in descending order of value, so that larger orders are handled first while more resources are available
-- For each order, it attempts to use the "points" method to cover at least
-- If the order qualifies, the discount is applied and the remaining amount is paid
-- The remaining amount is paid using a single traditional payment method with the highest available limit — only one such method is allowed per order
+- For each order, it attempts to use the "points" method to cover at least a minimum required percentage and unlock a discount
+- If the order qualifies, the discount is applied and the remaining amount is paid 
+- The remaining amount is paid using a single traditional payment method with the highest available limit - only one such method is allowed per order
 
 This approach does not guarantee global optimality but provides a reasonable heuristic that maximizes discounts locally
