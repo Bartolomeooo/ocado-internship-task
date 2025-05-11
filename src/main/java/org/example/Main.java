@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.config.PlannerConfig;
 import org.example.model.Order;
 import org.example.model.PaymentMethod;
 import org.example.parser.OrderParser;
@@ -27,8 +28,9 @@ public class Main {
         List<Order> orders = OrderParser.parse(ordersPath);
         List<PaymentMethod> methods = PaymentMethodParser.parse(methodsPath);
 
-        PaymentPlanner planner = new GreedyPaymentPlanner();
-        List<OrderPaymentBreakdown> breakdowns = planner.plan(orders, methods, pointsId);
+        PlannerConfig config = new PlannerConfig("PUNKTY", BigDecimal.valueOf(0.1), BigDecimal.valueOf(0.1));
+        PaymentPlanner planner = new GreedyPaymentPlanner(config);
+        List<OrderPaymentBreakdown> breakdowns = planner.plan(orders, methods);
 
         Map<String, BigDecimal> totalPerMethod = new HashMap<>();
         BigDecimal totalDiscount = BigDecimal.ZERO;

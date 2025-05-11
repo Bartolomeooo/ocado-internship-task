@@ -1,5 +1,6 @@
 package org.example.planner;
 
+import org.example.config.PlannerConfig;
 import org.example.model.Order;
 import org.example.model.PaymentMethod;
 import org.example.breakdown.OrderPaymentBreakdown;
@@ -8,11 +9,17 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class GreedyPaymentPlanner implements PaymentPlanner {
+    private final PlannerConfig config;
+
+    public GreedyPaymentPlanner(PlannerConfig config) {
+        this.config = config;
+    }
+
     @Override
-    public List<OrderPaymentBreakdown> plan(List<Order> orders, List<PaymentMethod> paymentMethods, String pointsId) {
+    public List<OrderPaymentBreakdown> plan(List<Order> orders, List<PaymentMethod> paymentMethods) {
         GreedyPaymentPlannerContext context = new GreedyPaymentPlannerContext(orders, paymentMethods);
-        allocatePayments(context, paymentMethods, pointsId);
-        handleUnpaidOrders(context, paymentMethods, pointsId);
+        allocatePayments(context, paymentMethods, config.getPointsMethodId());
+        handleUnpaidOrders(context, paymentMethods, config.getPointsMethodId());
         return new ArrayList<>(context.getAllOrderPaymentBreakdowns());
     }
 
@@ -36,7 +43,8 @@ public class GreedyPaymentPlanner implements PaymentPlanner {
         }
     }
 
-    private PriorityQueue<PaymentMethod> createPrioritizedMethodQueue(List<PaymentMethod> methods, GreedyPaymentPlannerContext context) {
+    private PriorityQueue<PaymentMethod> createPrioritizedMethodQueue(List<PaymentMethod> methods,
+                                                                      GreedyPaymentPlannerContext context) {
         return new PriorityQueue<>(
                 Comparator.comparing((PaymentMethod paymentMethod) ->
                         paymentMethod.getDiscount().multiply(context.getRemainingLimit(paymentMethod.getId()))
@@ -46,7 +54,9 @@ public class GreedyPaymentPlanner implements PaymentPlanner {
         }};
     }
 
-    private Optional<Order> selectMostValuableEligibleOrder(GreedyPaymentPlannerContext context, PaymentMethod method, String pointsId) {
+    private Optional<Order> selectMostValuableEligibleOrder(GreedyPaymentPlannerContext context,
+                                                            PaymentMethod method,
+                                                            String pointsId) {
         BigDecimal remainingPaymentMethodLimit = context.getRemainingLimit(method.getId());
 
         return context.getUnfulfilledOrderIds().stream()
@@ -67,7 +77,9 @@ public class GreedyPaymentPlanner implements PaymentPlanner {
                 .max(Comparator.comparing(Order::getValue));
     }
 
-    private void allocateOrderWithMethod(GreedyPaymentPlannerContext context, PaymentMethod method, Order order) {
+    private void allocateOrderWithMethod(GreedyPaymentPlannerContext context,
+                                         PaymentMethod method,
+                                         Order order) {
         BigDecimal orderValue = order.getValue();
         BigDecimal discount = orderValue.multiply(method.getDiscount()).divide(BigDecimal.valueOf(100));
         BigDecimal amountToPayAfterDiscount = orderValue.subtract(discount);
@@ -95,9 +107,11 @@ public class GreedyPaymentPlanner implements PaymentPlanner {
         }
     }
 
-    private BigDecimal tryToApplyPoints(GreedyPaymentPlannerContext context, String orderId, BigDecimal remainingUnpaidOrderValue, String pointsId) {
+    private BigDecimal tryToApplyPoints(GreedyPaymentPlannerContext context,
+                                        String orderId, BigDecimal remainingUnpaidOrderValue,
+                                        String pointsId) {
         OrderPaymentBreakdown breakdown = context.getOrderPaymentBreakdown(orderId);
-        BigDecimal pointsThresholdForDiscount = remainingUnpaidOrderValue.multiply(BigDecimal.valueOf(0.1));
+        BigDecimal pointsThresholdForDiscount = remainingUnpaidOrderValue.multiply(config.getMinPointsRatioForDiscount());
         BigDecimal pointsAvailable = context.getRemainingLimit(pointsId);
         boolean isLastUnpaidOrder = context.getUnfulfilledOrderIds().size() == 1;
 
@@ -106,7 +120,7 @@ public class GreedyPaymentPlanner implements PaymentPlanner {
             breakdown.getAmountPaidByMethodId().put(pointsId, pointsAmountAllocatedToOrder);
             context.decreaseLimit(pointsId, pointsAmountAllocatedToOrder);
             remainingUnpaidOrderValue = remainingUnpaidOrderValue
-                    .subtract(remainingUnpaidOrderValue.multiply(BigDecimal.valueOf(0.1)))
+                    .subtract(remainingUnpaidOrderValue.multiply(config.getDiscountPercentage()))
                     .subtract(pointsAmountAllocatedToOrder);
         }
 

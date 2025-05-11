@@ -7,5 +7,5 @@ import org.example.breakdown.OrderPaymentBreakdown;
 import java.util.List;
 
 public interface PaymentPlanner {
-    List<OrderPaymentBreakdown> plan(List<Order> orders, List<PaymentMethod> methods, String pointsId);
+    List<OrderPaymentBreakdown> plan(List<Order> orders, List<PaymentMethod> methods);
 }
