@@ -1,9 +1,10 @@
-package org.example.planner;
+package org.example.planner.greedy;
 
 import org.example.config.PlannerConfig;
 import org.example.model.Order;
 import org.example.model.PaymentMethod;
 import org.example.breakdown.OrderPaymentBreakdown;
+import org.example.planner.PaymentPlanner;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package org.example.planner;
+package org.example.planner.greedy;
 
 import org.example.breakdown.OrderPaymentBreakdown;
 import org.example.config.PlannerConfig;
