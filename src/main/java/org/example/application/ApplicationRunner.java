@@ -20,7 +20,12 @@ public class ApplicationRunner {
     public void run(String ordersPath, String methodsPath) {
         List<Order> orders = OrderParser.parse(ordersPath);
         List<PaymentMethod> methods = PaymentMethodParser.parse(methodsPath);
-        List<OrderPaymentBreakdown> result = planner.plan(orders, methods);
-        PaymentSummaryPrinter.print(result);
+        try {
+            List<OrderPaymentBreakdown> result = planner.plan(orders, methods);
+            PaymentSummaryPrinter.print(result);
+        } catch (IllegalStateException e) {
+            System.err.println("Payment planning failed - no valid solution could be found: " + e.getMessage());
+            System.exit(1);
+        }
     }
 }
