@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class OrderParser {
-
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static List<Order> parse(String filePath) {
